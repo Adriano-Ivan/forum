@@ -3,23 +3,27 @@ package br.com.adriano.forum.controller;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import br.com.adriano.forum.controller.dto.TopicoDto;
 import br.com.adriano.forum.modelo.Curso;
 import br.com.adriano.forum.modelo.Topico;
+import br.com.adriano.forum.repository.TopicoRepository;
 
-@Controller
+@RestController
 public class TopicosController {
 	
+	@Autowired
+	private TopicoRepository topicoRepository;
+	
 	@RequestMapping("/topicos")
-	@ResponseBody
-	public List<Topico> lista(){
-		Topico t1 = new Topico("Dúvida","Dúvida com Spring",
-				new Curso("Spring", "Programação"));
-		
-		return Arrays.asList(t1,t1,t1);
-				
+	public List<TopicoDto> lista(String nomeCurso){
+		System.out.println(nomeCurso);
+		List<Topico> topicos = topicoRepository.findByCurso_Nome(nomeCurso);
+		return Topico.converter(topicos);			
 	}
 }

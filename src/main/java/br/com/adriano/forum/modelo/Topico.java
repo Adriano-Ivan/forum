@@ -3,18 +3,47 @@ package br.com.adriano.forum.modelo;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import br.com.adriano.forum.controller.dto.TopicoDto;
+
+@Entity
+@Table(name="topicos")
 public class Topico {
 
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String titulo;
+	private String cursoNome;
 	private String mensagem;
 	private LocalDateTime dataCriacao = LocalDateTime.now();
+	
+	@Enumerated(EnumType.STRING)
 	private StatusTopico status = StatusTopico.NAO_RESPONDIDO;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
 	private Usuario autor;
+	@ManyToOne(fetch=FetchType.LAZY)
 	private Curso curso;
+	@OneToMany(mappedBy="topico",fetch=FetchType.LAZY)
+	@JsonIgnore
 	private List<Resposta> respostas = new ArrayList<>();
 
+	public Topico() {}
 	public Topico(String titulo, String mensagem, Curso curso) {
 		this.titulo = titulo;
 		this.mensagem = mensagem;
@@ -108,6 +137,11 @@ public class Topico {
 
 	public void setRespostas(List<Resposta> respostas) {
 		this.respostas = respostas;
+	}
+
+	public static List<TopicoDto> converter(List<Topico> topicos) {
+		return topicos.stream().map(TopicoDto::new)
+				.collect(Collectors.toList());
 	}
 
 }
