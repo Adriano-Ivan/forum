@@ -35,6 +35,7 @@ public class SecurityConfigurations extends
 	protected AuthenticationManager authenticationManager() throws Exception {
 		return super.authenticationManager();
 	}
+	
 	// Configurações de autenticação
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -49,6 +50,7 @@ public class SecurityConfigurations extends
 		.antMatchers(HttpMethod.GET,"/topicos").permitAll()
 		.antMatchers(HttpMethod.GET,"/topicos/*").permitAll()
 		.antMatchers(HttpMethod.POST,"/auth").permitAll()
+		.antMatchers(HttpMethod.GET,"/actuator/**").permitAll()
 		.anyRequest().authenticated()
 		.and().csrf().disable()
 		.sessionManagement()
