@@ -106,6 +106,7 @@ public class TopicosController {
 		return ResponseEntity.notFound().build();
 	
 	}
+	
 	@DeleteMapping("/{id}")
 	@Transactional
 	@CacheEvict(value="listaDeTopicos",
